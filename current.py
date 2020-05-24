@@ -3,8 +3,17 @@ import decimal
 import re
 import datetime
 
+wb = openpyxl.load_workbook('datatypes.xlsx')
 
-ws = openpyxl.load_workbook('datatypes.xlsx').active
+ws = wb.active
+
+time1 = ws['B1'].value
+
+
+print(time1.date())
+print(time1.isoformat(sep=' '))
+
+
 
 print("{} 的数据类型是 {}".format(ws['A1'].value, type(ws['A1'].value)))
 print("{} 的数据类型是 {}".format(ws['A2'].value, type(ws['A2'].value)))
@@ -18,3 +27,5 @@ print("{} 的数据类型是 {}".format(ws['B3'].value, type(ws['B3'].value)))
 print("{} 的数据类型是 {}".format(ws['B4'].value, type(ws['B4'].value)))
 print("{} 的数据类型是 {}".format(ws['B5'].value, type(ws['B5'].value)))
 
+
+print(datetime.datetime.strptime('2020-05-27','%Y-%m-%d'))
