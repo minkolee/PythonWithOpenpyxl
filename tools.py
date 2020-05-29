@@ -107,3 +107,12 @@ def transfer_to_decimal(num) -> decimal.Decimal:
     # 不是上述三种类型
     else:
         raise AttributeError
+
+
+# 打开文件并返回指定名称的工作表, 或者返回活动工作表
+def open_xlsx_file(file_name:str, sheet_name=None):
+    if sheet_name:
+        return openpyxl.load_workbook(file_name)[sheet_name]
+    else:
+        return openpyxl.load_workbook(file_name).active
+
