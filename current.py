@@ -1,12 +1,6 @@
 import tools
 import openpyxl
 
-# 导出的格式好在统一, 不用进行什么额外处理
-# 这里要先打印一行出来展示一下是什么.
-print(tools.open_xlsx_file('kisdocument.xlsx').max_row)
-print(tools.open_xlsx_file('kisdocument.xlsx').max_column)
-
-
 def fill_column(column: int, worksheet: str):
     ws = tools.open_xlsx_file(worksheet)
 
@@ -51,11 +45,10 @@ def fill_column(column: int, worksheet: str):
             print('将从 {} 行开始处理下一张凭证'.format(current_row))
             print('-----------------------------------------------------------------------')
 
-
-    # 如果执行到这里, 说明处理完毕
-    # ws.parent就是ws的爸爸, 也就是工作簿对象
-    ws.parent.save('result.xlsx')
+    return ws
 
 
 if __name__ == '__main__':
-    fill_column(6, 'kisdocument.xlsx')
+    dic = {}
+
+    print(dic.get("uifd"))
