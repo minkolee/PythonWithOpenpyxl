@@ -57,6 +57,7 @@ def monthlize(path: str):
     wb.save(path.split('.')[0] + 'monthly.xlsx')
 
 
+# 将读出的单元格转换成定点数
 def transfer_to_decimal(num) -> decimal.Decimal:
     # 如果是一个整数, 就直接进行转换
     if type(num) == int:
@@ -115,3 +116,31 @@ def open_xlsx_file(file_name: str, sheet_name=None):
         return openpyxl.load_workbook(file_name)[sheet_name]
     else:
         return openpyxl.load_workbook(file_name).active
+
+
+# 填充金蝶导出的凭证的一列
+def fill_column(col_number: int, worksheet):
+    """
+    处理金蝶导出的凭证, 自动填充指定的列缺失的内容
+    :param col_number: 要填充的列号
+    :param worksheet: 要填充的工作表对象
+    :return: 填充完成后的同一个工作表对象
+    """
+
+    # 第一行固定指向2
+    current = 2
+    # 获取最大行
+    max_index = worksheet.max_row - 1
+    # While current不越界:
+    while current <= max_index:
+        # if格子是None
+        if not worksheet.cell(row=current, column=col_number).value:
+            # 填充上一格数据
+            worksheet.cell(current, col_number, worksheet.cell(current - 1, col_number).value)
+        # else:
+        # 什么也不做
+
+        # current移动1格
+        current += 1
+
+    return worksheet
