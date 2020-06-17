@@ -3,6 +3,7 @@ import openpyxl
 import random
 import decimal
 import re
+import configparser
 
 
 # 返回一个目录内所有的.xlsx文件的路径
@@ -144,3 +145,23 @@ def fill_column(col_number: int, worksheet):
         current += 1
 
     return worksheet
+
+
+# 加载配置文件
+def load_config(file_name: str = None) -> configparser.ConfigParser:
+    config = configparser.ConfigParser()
+    if not file_name:
+        config.read('config.ini')
+    else:
+        config.read(file_name)
+
+    return config
+
+
+# 计算流动比率
+def cal_current_ratio(worksheet, config) -> str:
+    total_liquid_asset = worksheet[config['ratio']['liquid_asset']].value
+
+    total_liquid_liability = worksheet[config['ratio']['liquid_liability']].value
+
+    return "{:.2f}%".format(total_liquid_asset / total_liquid_liability * 100)
