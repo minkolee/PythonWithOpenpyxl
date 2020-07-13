@@ -214,3 +214,56 @@ def process_worksheet(worksheet):
     text_to_columns(4, '-', 3, worksheet)
 
     return worksheet
+
+# 以一列为键, 合并汇总另外一列的值
+def subtotal_single(key_column: int, value_column: int, file_name: str) -> dict:
+    wb = tools.open_xlsx_file(file_name)
+
+    result = {}
+
+    # 2 -> wb.max_row -1 是要处理的列
+    for i in range(2, wb.max_row):
+
+        # 键是否存在于字典中
+        key = wb.cell(row=i, column=key_column).value
+
+        if key in result:
+
+            # 存在的话, 需要更新
+            result[key] = result[key] + tools.transfer_to_decimal(wb.cell(row=i, column=value_column).value)
+
+        # 不存在的话, 直接设置
+        else:
+            result[key] = tools.transfer_to_decimal(wb.cell(row=i, column=value_column).value)
+
+    return result
+
+# 以一列为键, 合并汇总另外多列的值, 每个值是平行汇总的
+def subtotal_composite(key_column: int, value_column1: int, value_column2: int, file_name: str) -> dict:
+    wb = tools.open_xlsx_file(file_name)
+
+    result = {}
+    # 2 -> wb.max_row -1 是要处理的列
+    for i in range(2, wb.max_row):
+
+        # 键是否存在于字典中
+        key = wb.cell(row=i, column=key_column).value
+
+        if key in result:
+            # 如果存在, 要更新两个值
+            result[key][wb.cell(row=1, column=value_column1).value] = result[key][wb.cell(row=1,
+                                                                                          column=value_column1).value] + tools.transfer_to_decimal(
+                wb.cell(row=i, column=value_column1).value)
+            result[key][wb.cell(row=1, column=value_column2).value] = result[key][wb.cell(row=1,
+                                                                                          column=value_column2).value] + tools.transfer_to_decimal(
+                wb.cell(row=i, column=value_column2).value)
+
+        # 不存在的话, 创建键和对应的嵌套字典, 初始值是0
+        else:
+            result[key] = {}
+            result[key][wb.cell(row=1, column=value_column1).value] = tools.transfer_to_decimal(
+                wb.cell(row=i, column=value_column1).value)
+            result[key][wb.cell(row=1, column=value_column2).value] = tools.transfer_to_decimal(
+                wb.cell(row=i, column=value_column2).value)
+
+    return result
