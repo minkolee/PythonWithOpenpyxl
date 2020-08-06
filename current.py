@@ -53,8 +53,6 @@ color2 = Color(theme=2, tint=-0.1499984740745262)
 
 style_for_body.fill = PatternFill("solid", fgColor=color2)
 
-print(target_ws['a3'].border.left)
-
 style_for_body.border = Border(left=Side(border_style='thin', color='FF000000'),
                                right=Side(border_style='thin', color='FF000000'),
                                bottom=Side(border_style='thin', color='FF000000'),
