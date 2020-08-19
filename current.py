@@ -1,6 +1,6 @@
 import random
 import openpyxl
-from openpyxl.styles import PatternFill, Border, Side, Alignment, Font, Color, NamedStyle
+from openpyxl.styles import PatternFill, Border, Side, Alignment, Protection, Font, Color, NamedStyle, Side
 
 def sales_list(ws, number_of_row):
     ws['a1'].value = "销售清单"
@@ -25,4 +25,3 @@ wb = openpyxl.Workbook()
 ws = wb.active
 
 sales_list(ws, 20).parent.save("new.xlsx")
-
