@@ -1,8 +1,8 @@
 import random
 import openpyxl
+import tkinter
+import time
 from openpyxl.styles import PatternFill, Border, Side, Alignment, Font, Color, NamedStyle
-
-import sys
 
 def coloredStyle(title_color, header_color, body_color):
 
@@ -10,7 +10,6 @@ def coloredStyle(title_color, header_color, body_color):
 
         def wrapper(ws, number_of_row):
 
-            # 设置标题样式
             ws.merge_cells('a1:f1')
             color1 = Color(rgb=title_color)
             font = Font(name="Microsoft YaHei UI", size=34, b=True, color=color1)
@@ -19,7 +18,6 @@ def coloredStyle(title_color, header_color, body_color):
             a1.font = font
             a1.alignment = alignment
 
-            # 设置表头样式
             color2 = Color(rgb=header_color)
             style_for_row2 = NamedStyle(name='header')
             style_for_row2.font = Font(name='Calibri', size=16, color='FFFFFF')
@@ -29,7 +27,6 @@ def coloredStyle(title_color, header_color, body_color):
             for each_cell in ws[2]:
                 each_cell.style = style_for_row2
 
-            # 设置表格样式
             for i in range(1, number_of_row + 3):
                 ws.row_dimensions[i].height = 49.5
             for i in range(1, 7):
@@ -78,25 +75,45 @@ def sales_list(ws, number_of_row):
 
 if __name__ == '__main__':
 
-    wb = openpyxl.Workbook()
-    ws = wb.active
-    # 判断sys.argv的长度
+    # 排布窗体和控件
+    main_frame = tkinter.Tk()
+    main_frame.title("生成excel文件")
+    main_frame.geometry("800x600")
 
-    if len(sys.argv)!=1 and len(sys.argv)!=2:
-        print("参数错误")
+    main_message = '请输入要生成的文件名称, 不输入则默认保存为new.xlsx'
+    message_label = tkinter.Label(master=main_frame,text=main_message, font=("微软雅黑", 24))
+    message_label.grid(row=0)
 
-    elif len(sys.argv) == 1:
-        sales_list(ws, 20).parent.save("new.xlsx")
-    else:
-        # 还可以加一些判断, 比如文件名不合法
+    tkinter.Label(main_frame, text="文件名:", font=("微软雅黑", 16)).grid(column=0, row=1)
+    input_filename = tkinter.Entry(main_frame, width=20,font=("微软雅黑", 16))
+    input_filename.grid(column=0,row=2)
+
+    start_button = tkinter.Button(main_frame, text="生成文件",font=("微软雅黑", 16),bg='#4cc7b2',fg='white')
+    start_button.grid(row=3, pady=10)
+
+    result_label = tkinter.Label(main_frame,font=("微软雅黑", 14))
+    result_label.grid(row=4)
+
+    # 创建按钮绑定的函数
+    def button_on_click():
+        start_button.configure(state=tkinter.DISABLED)
+        filename = input_filename.get().strip() or 'new.xlsx'
+
+        wb = openpyxl.Workbook()
+        ws = wb.active
+
+        time.sleep(2)
+
         try:
-            sales_list(ws, 20).parent.save(sys.argv[1])
+            sales_list(ws, 20).parent.save(filename)
+            result_label.configure(text="成功保存为: {}".format(filename))
         except:
-            print("文件名不合法.")
+            result_label.configure(text="文件名不合法, 请重新再试".format(filename))
+        finally:
+            start_button.configure(state=tkinter.NORMAL)
 
+    # 绑定函数给按钮
+    start_button.configure(command=button_on_click)
 
-
-
-
-
-
+    # 启动图形化界面
+    main_frame.mainloop()
